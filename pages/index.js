@@ -1,36 +1,13 @@
 import appConfig from '../config.json';
 import {Box, Button, Text,TextField,Image} from '@skynexui/components';
+import React from 'react';
+import {useRouter} from 'next/router';
+
 
 //Componentes react
 // Função js que retorna html
-function GlobalStyle() {
-    return (
-      <style global jsx>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          list-style: none;
-        }
-        body {
-          font-family: 'Open Sans', sans-serif;
-        }
-        /* App fit Height */ 
-        html, body, #__next {
-          min-height: 100vh;
-          display: flex;
-          flex: 1;
-        }
-        #__next {
-          flex: 1;
-        }
-        #__next > * {
-          flex: 1;
-        }
-        /* ./App fit Height */ 
-      `}</style>
-    );
-  }
+
+
 
 function Titulo(props){
     const Tag = props.tag || 'h1';
@@ -68,11 +45,14 @@ function Titulo(props){
 export default HomePage*/
 
 export default function PaginaInicial() {
-    const username = 'diegodreossi';
-  
+    //const username = 'diegodreossi';
+    //Expande o array
+    const [username, setUsername] = React.useState('diegodreossi'); 
+    //É esse setUsername que cria um novo estado da página
+    const roteamento = useRouter();
+
     return (
       <>
-        <GlobalStyle />
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -99,6 +79,14 @@ export default function PaginaInicial() {
             {/* Formulário */}
             <Box
               as="form"
+              onSubmit={function (infosevento){
+                infosevento.preventDefault();
+                //Evita comportamento padrão dos navegadores, que
+                //nesse caso é reiniciar toda a página quando o botão é 
+                //apertado, ou seja, quando o formulário é submetido 
+                //window.location.href ='/chat'; //Muda a página
+                roteamento.push('/chat');
+              }}
               styleSheet={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -109,7 +97,16 @@ export default function PaginaInicial() {
                 {appConfig.name}
               </Text>
   
+              
+
               <TextField
+                value={username} 
+                onChange={function handler(event){
+                 //Onde está o valor?
+                 const valor = event.target.value;
+                 // Trocar o valor da variável
+                 setUsername(valor);
+                }}
                 fullWidth
                 textFieldColors={{
                   neutral: {
@@ -151,13 +148,16 @@ export default function PaginaInicial() {
                 minHeight: '240px',
               }}
             >
+              
               <Image
                 styleSheet={{
                   borderRadius: '50%',
                   marginBottom: '16px',
                 }}
-                src={`https://github.com/${username}.png`}
+                src={`https://github.com/${username}.png` }
               />
+              
+              
               <Text
                 variant="body4"
                 styleSheet={{
