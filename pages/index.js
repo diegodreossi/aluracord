@@ -4,8 +4,8 @@ import React from 'react';
 import {useRouter} from 'next/router';
 
 
-//Componentes react
-// Função js que retorna html
+//Componentes do react
+// Função javascript que retornam html
 
 function Titulo(props){
     const Tag = props.tag || 'h1';
@@ -114,7 +114,7 @@ export default function PaginaInicial() {
             {/* Formulário */}
   
   
-            {/* Photo Area */}
+            {/*Area da foto */}
             <Box
               styleSheet={{
                 display: 'flex',
