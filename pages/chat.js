@@ -1,6 +1,21 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import React from 'react';
 import appConfig from '../config.json';
+
+/* Supabase.com
+Back-end como serviço
+Será um repositório que recebe a mensagem e devolve 
+Ver Artigo como fazer AJAX do Mario Souto*/
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQ4NjQ4MywiZXhwIjoxOTU5MDYyNDgzfQ.U7jfrfsdOu0yI6etPU9JC6dZGEiECuxfpbF0VyilVUU';
+const SUPABASE_URL = 'https://xuhhvzlhyrskzhgkourb.supabase.co';
+
+const supabaseClient = createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+
+
+
+
 
 export default function ChatPage() {
     // Sua lógica vai aqui
@@ -17,17 +32,37 @@ export default function ChatPage() {
     const [mensagem, setMensagem] = React.useState('');
     const [listademensagens, setListaDeMensagens] = React.useState([]);
 
+    React.useEffect(()=>{
+        supabaseClient
+        .from('mensagens')
+        .select('*')
+        .order('id',{ascending:false})
+        .then(({data})=>{
+            console.log('Dados da consulta: ',data);
+            setListaDeMensagens(data);/*Ativado quando a lista de mensagens mudar */
+        });
+    /* order('id',{ascending:false}) determina a ordem com que as mensagens vem */
+    },[]);
+
     function handleNovaMensagem(NovaMensagem) {
         const mensagem = {
-            id: listademensagens.length + 1,
+            //id: listademensagens.length + 1,
             de: "diegodreossi",
             texto: NovaMensagem
         };
-        setListaDeMensagens([
-            //Mensagem na ordem certa
-            mensagem,
-            ...listademensagens
-        ]);
+
+        supabaseClient
+            .from('mensagens')
+            .insert([mensagem])
+            .then(({data})=>{
+                //console.log('Criando mensagem: ',data[0]);
+                setListaDeMensagens([
+                    //Mensagem na ordem certa
+                    data[0],
+                    ...listademensagens
+                ]);
+            });
+        /*No insert tem que ser um objeto com os mesmos campos escritos no supabase*/
         setMensagem('');//Limpa a caixa de texto
     }
     // ./Sua lógica vai aqui
@@ -140,11 +175,11 @@ function Header() {
 
 function MessageList(props) {
     console.log('MessageList', props);
-    return (
+    return ({/*overflow:''scroll aparece a barra de rolagem horizontal e lateral */},
         <Box
             tag="ul"
             styleSheet={{
-                overflow: 'scroll',
+                overflow: 'auto',
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
