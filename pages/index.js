@@ -7,8 +7,6 @@ import {useRouter} from 'next/router';
 //Componentes react
 // Função js que retorna html
 
-
-
 function Titulo(props){
     const Tag = props.tag || 'h1';
     return (
@@ -27,9 +25,6 @@ function Titulo(props){
 
 // Na HomePage no Titulo foi criado o parametro Tag, que é transformado
 // no Titulo em uma variavel e é trabalhada pelo componente. 
-
-
-
 
 export default function PaginaInicial() {
     //const username = 'diegodreossi';
@@ -157,7 +152,7 @@ export default function PaginaInicial() {
                 {username}
               </Text>
             </Box>
-            {/* Photo Area */}
+            {/* Area da foto */}
           </Box>
         </Box>
       </>

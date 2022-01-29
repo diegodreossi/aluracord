@@ -3,10 +3,12 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import React from 'react';
 import appConfig from '../config.json';
 
-/* Supabase.com
+/* 
+Supabase.com
 Back-end como serviço
 Será um repositório que recebe a mensagem e devolve 
-Ver Artigo como fazer AJAX do Mario Souto*/
+Ver Artigo como fazer AJAX do Mario Souto
+*/
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQ4NjQ4MywiZXhwIjoxOTU5MDYyNDgzfQ.U7jfrfsdOu0yI6etPU9JC6dZGEiECuxfpbF0VyilVUU';
 const SUPABASE_URL = 'https://xuhhvzlhyrskzhgkourb.supabase.co';
 
@@ -41,7 +43,7 @@ export default function ChatPage() {
 
     function handleNovaMensagem(NovaMensagem) {
         const mensagem = {
-            //id: listademensagens.length + 1,
+
             de: "diegodreossi",
             texto: NovaMensagem
         };
@@ -100,15 +102,7 @@ export default function ChatPage() {
                 >
 
                     { <MessageList mensagens={listademensagens} />}
-                    {/*listademensagens.map((mensagemAtual)=>{
-                        return (
-                            <li key={mensagemAtual.id}>
-                                {mensagemAtual.de}: {mensagemAtual.texto}
-                            </li>
-                        )
-                    })*/}
-
-
+                    
                     <Box
                         as="form"
                         styleSheet={{
