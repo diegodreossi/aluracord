@@ -12,11 +12,6 @@ const SUPABASE_URL = 'https://xuhhvzlhyrskzhgkourb.supabase.co';
 
 const supabaseClient = createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-
-
-
-
-
 export default function ChatPage() {
     // Sua lógica vai aqui
     /*Usuário

@@ -30,19 +30,6 @@ function Titulo(props){
 
 
 
-/*function HomePage() {
-    //JSX
-    //O () do return é para facilitar na escrita do código, para não depender de identação
-    return (
-    <div>
-        <GlobalStyle/>
-        <Titulo tag="h1">Boas vindas de volta!</Titulo>
-        <h2>Discord - Alura Matrix</h2>
-    </div>
-    )
-}
-  
-export default HomePage*/
 
 export default function PaginaInicial() {
     //const username = 'diegodreossi';
