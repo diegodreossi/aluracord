@@ -3,7 +3,6 @@ import {Box, Button, Text,TextField,Image} from '@skynexui/components';
 import React from 'react';
 import {useRouter} from 'next/router';
 
-
 //Componentes do react
 // Função javascript que retornam html
 
@@ -32,6 +31,7 @@ export default function PaginaInicial() {
     const [username, setUsername] = React.useState('diegodreossi'); 
     //É esse setUsername que cria um novo estado da página
     const roteamento = useRouter();
+    //Padroniza as rotas/url
 
     return (
       <>
@@ -67,7 +67,7 @@ export default function PaginaInicial() {
                 //nesse caso é reiniciar toda a página quando o botão é 
                 //apertado, ou seja, quando o formulário é submetido 
                 //window.location.href ='/chat'; //Muda a página
-                roteamento.push('/chat');
+                roteamento.push(`/chat?username=${username}`);
               }}
               styleSheet={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',

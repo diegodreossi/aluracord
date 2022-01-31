@@ -1,7 +1,9 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import React from 'react';
 import appConfig from '../config.json';
+import {useRouter} from 'next/router';
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
 
 /* 
 Supabase.com
@@ -15,6 +17,15 @@ const SUPABASE_URL = 'https://xuhhvzlhyrskzhgkourb.supabase.co';
 const supabaseClient = createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 //Cria cliente supabase
 
+function escutaMensagensEmTempoReal(addmensagem){
+    return supabaseClient
+        .from('mensagens')
+        .on('INSERT',(resposta)=>{
+            addmensagem(resposta.new);
+        })
+        .subscribe();
+}
+
 export default function ChatPage() {
     // Sua lógica vai aqui
     /*Usuário
@@ -27,8 +38,17 @@ export default function ChatPage() {
     - Vamos usar o onChange usa o useState (ter if para caso seja enter para limpar a variável)
     - Lista de mensagens
     */
+    const roteamento = useRouter();
+    //Usuário logado
+    const usuarioLogado = roteamento.query.username;
     const [mensagem, setMensagem] = React.useState('');
-    const [listademensagens, setListaDeMensagens] = React.useState([]);
+    const [listademensagens, setListaDeMensagens] = React.useState([
+        /*{
+            id:1,
+            de:'diegodreossi',
+            texto:':sticker: https://www.alura.com.br/imersao-react-4/assets/figurinhas/Figurinha_8.png'
+        }*/
+    ]);
 
     React.useEffect(()=>{
         supabaseClient
@@ -36,8 +56,17 @@ export default function ChatPage() {
         .select('*')
         .order('id',{ascending:false})
         .then(({data})=>{
-            console.log('Dados da consulta: ',data);
+            //console.log('Dados da consulta: ',data);
             setListaDeMensagens(data);/*Ativado quando a lista de mensagens mudar */
+        });
+        escutaMensagensEmTempoReal((NovaMensagem)=>{
+            setListaDeMensagens((valorAtualDaLista)=>{
+                return [
+                    //Mensagem na ordem certa
+                    NovaMensagem,
+                    ...valorAtualDaLista
+                ]
+            });
         });
     /* order('id',{ascending:false}) determina a ordem com que as mensagens vem */
     },[]);
@@ -45,20 +74,20 @@ export default function ChatPage() {
     function handleNovaMensagem(NovaMensagem) {
         const mensagem = {
 
-            de: "diegodreossi",
+            de: usuarioLogado,
             texto: NovaMensagem
         };
 
         supabaseClient
             .from('mensagens')
             .insert([mensagem])
-            .then(({data})=>{
+            .then(()=>{
                 //console.log('Criando mensagem: ',data[0]);
-                setListaDeMensagens([
+                /*setListaDeMensagens([
                     //Mensagem na ordem certa
                     data[0],
                     ...listademensagens
-                ]);
+                ]);*/
             });
         /*No insert tem que ser um objeto com os mesmos campos escritos no supabase*/
         setMensagem('');//Limpa a caixa de texto
@@ -138,6 +167,14 @@ export default function ChatPage() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+                        {/* Passamos uma função nossa no onStickerClick */}
+                        {/* Callback */}
+                        <ButtonSendSticker 
+                        onStickerClick={(sticker)=>{
+                            handleNovaMensagem(':sticker:'+sticker);
+                        }}
+                        />
+                        {/* Botão que mostra os stickers */}
                     </Box>
                 </Box>
             </Box>
@@ -164,7 +201,9 @@ function Header() {
 }
 
 function MessageList(props) {
-    console.log('MessageList', props);
+    //console.log('MessageList', props);
+    //Por padrão renderiza só textos, mas criaremos condicionais para
+    //mostrar putros tipos de mensagens (stickers por exemplo)
     return ({/*overflow:''scroll aparece a barra de rolagem horizontal e lateral */},
         <Box
             tag="ul"
@@ -220,7 +259,18 @@ function MessageList(props) {
                                 {(new Date().toLocaleDateString())}
                             </Text>
                         </Box>
-                        {mensagem.texto}
+                        {/* Corpo da mensagen 
+                        if mensagem de texto possui stickers
+                            mostra a imagem
+                        else
+                            mensagem.texto
+                        */
+                        }
+                        {mensagem.texto.startsWith(':sticker:') ? 
+                        (<Image styleSheet={{width:'150px',height:'150px'}} src={mensagem.texto.replace(':sticker:','')}/>):
+                        (mensagem.texto)
+                        }
+                        {/*mensagem.texto*/}
                     </Text>
                 );
             })}
